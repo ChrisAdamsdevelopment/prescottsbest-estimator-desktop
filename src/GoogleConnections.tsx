@@ -111,4 +111,4 @@ export function GoogleConnections({ token }: { token: string }) {
     </div>}
     {message && <p className="ai-help" role="status">{message}</p>}
   </section>;
-}\n\n
+}
