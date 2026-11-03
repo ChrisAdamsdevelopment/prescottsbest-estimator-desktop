@@ -1,0 +1,14 @@
+{
+  "name": "Prescott's Best Estimator",
+  "short_name": "PBC Estimator",
+  "description": "Private field-ready construction estimates",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#102a38",
+  "background_color": "#f3f5f3",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

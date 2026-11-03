@@ -1,0 +1,20 @@
+# Never publish secrets, customer records or environment keys.
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+*.log
+*.tmp
+.DS_Store
+.npm-cache/
+server/.*
+server/.visual-library/
+scripts/*.png
+tests/.*.bundle.mjs
+*.bak
+*.sqlite
+*.db
+*.key
+*.pem
+__pycache__/
