@@ -32,7 +32,7 @@ jobs:
             --pattern 'SHA256SUMS.txt' \
             --dir "$RUNNER_TEMP/pbc-release"
           cd "$RUNNER_TEMP/pbc-release"
-          shasum -a 256 -c SHA256SUMS.txt
+          tr -d '\r' < SHA256SUMS.txt | shasum -a 256 -c -
           unzip -q PrescottsBestConstruction-Mac-20261113.zip
       - name: Verify macOS launchers and install dependencies
         shell: bash
