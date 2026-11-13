@@ -1,5 +1,22 @@
 # Prescott's Best Construction — Field Estimator & AI Bridge
 
+## Mac desktop download — November 13, 2026
+
+**For Andrew's Apple Mac**, download the tested-archive installer package at
+[Mac release: Prescott's Best Construction (2026-11-13)](https://github.com/ChrisAdamsdevelopment/prescottsbest-estimator-desktop/releases/tag/mac-v2026.11.13).
+On the release page, choose the named **`PrescottsBestConstruction-Mac-20261113.zip`** asset
+under Assets (not GitHub's auto-generated source archive).
+
+Extract the ZIP, install Node.js 22 LTS, right-click/open `INSTALL_MAC.command`, then double-click
+`OPEN_PBC_MAC.command`. Read `docs/ANDREW_MAC_SETUP.md` *inside the Mac ZIP* for
+Google/Gmail/Drive/Search Console consent, Apple Keychain and local ChatGPT/MCP configuration.
+This Mac package includes the newer D: drive working app features; the repository's ordinary
+main-branch ZIP is an older Windows-oriented edition. No API keys, customer records, OAuth
+refresh tokens, or Render admin secrets are included. This is an unsigned
+macOS source/launcher bundle, not a notarized .app. Live Google/ChatGPT connections
+must be authorized on Andrew's computer.
+
+
 This is the **public installer/source distribution** for the Windows-local Prescott's Best estimator. It includes estimating, optional AI analysis, an MCP tool server, local project planning, photo review, and optional Google Workspace connections.
 
 **This package contains no customer database, API credentials, Google tokens, supplier quotes, or access to the hosted bid portal.** Each operator starts with an independent local workspace.
