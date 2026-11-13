@@ -36,7 +36,7 @@ jobs:
           unzip -q PrescottsBestConstruction-MacLegacy-20261113.zip
       - name: Verify macOS launchers and install dependencies
         shell: bash
-        working-directory: ${{ runner.temp }}/pbc-release/PrescottsBestConstruction-MacLegacyLegacy
+        working-directory: ${{ runner.temp }}/pbc-release/PrescottsBestConstruction-MacLegacy
         run: |
           set -euo pipefail
           uname -s
@@ -54,7 +54,7 @@ jobs:
           node tests/mcp-smoke.mjs
       - name: Test local backend, Vite proxy and browser UI over loopback
         shell: bash
-        working-directory: ${{ runner.temp }}/pbc-release/PrescottsBestConstruction-MacLegacyLegacy
+        working-directory: ${{ runner.temp }}/pbc-release/PrescottsBestConstruction-MacLegacy
         env:
           AI_ACCESS_TOKEN: synthetic-pbc-runner-test-token-not-production
           AI_PORT: '8787'
