@@ -1,0 +1,82 @@
+name: Verify legacy PBC Mac installer on Node 20
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-mac-release:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout release metadata
+        uses: actions/checkout@v4
+      - name: Install legacy-compatible Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.20.2'
+      - name: Download exact signed-off Mac release ZIP
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/pbc-release"
+          gh release download mac-legacy-v2026.11.13 \
+            --repo "$GITHUB_REPOSITORY" \
+            --pattern 'PrescottsBestConstruction-MacLegacy-20261113.zip' \
+            --pattern 'SHA256SUMS.txt' \
+            --dir "$RUNNER_TEMP/pbc-release"
+          cd "$RUNNER_TEMP/pbc-release"
+          tr -d '\r' < SHA256SUMS.txt | shasum -a 256 -c -
+          unzip -q PrescottsBestConstruction-MacLegacy-20261113.zip
+      - name: Verify macOS launchers and install dependencies
+        shell: bash
+        working-directory: ${{ runner.temp }}/pbc-release/PrescottsBestConstruction-MacLegacyLegacy
+        run: |
+          set -euo pipefail
+          uname -s
+          uname -m
+          bash -n INSTALL_MAC.command
+          bash -n OPEN_PBC_MAC.command
+          test -x INSTALL_MAC.command
+          test -x OPEN_PBC_MAC.command
+          npm ci --no-audit --no-fund
+          npm run build
+          npm test
+          node tests/mac-google-keychain.test.mjs
+          node tests/google-workspace-smoke.mjs
+          npm run build:mcp-engine
+          node tests/mcp-smoke.mjs
+      - name: Test local backend, Vite proxy and browser UI over loopback
+        shell: bash
+        working-directory: ${{ runner.temp }}/pbc-release/PrescottsBestConstruction-MacLegacyLegacy
+        env:
+          AI_ACCESS_TOKEN: synthetic-pbc-runner-test-token-not-production
+          AI_PORT: '8787'
+        run: |
+          set -euo pipefail
+          node server/index.mjs > "$RUNNER_TEMP/pbc-api.log" 2>&1 &
+          api_pid=$!
+          npm run preview -- --port 4173 --strictPort > "$RUNNER_TEMP/pbc-web.log" 2>&1 &
+          web_pid=$!
+          trap 'kill "$api_pid" "$web_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for _ in $(seq 1 30); do
+            if curl --silent --fail --max-time 2 http://127.0.0.1:8787/api/health > /dev/null && \
+               curl --silent --fail --max-time 2 http://127.0.0.1:4173/ > /dev/null && \
+               curl --silent --fail --max-time 2 http://127.0.0.1:4173/api/health > /dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [[ "$ready" != 1 ]]; then
+            cat "$RUNNER_TEMP/pbc-api.log" "$RUNNER_TEMP/pbc-web.log"
+            exit 1
+          fi
+          echo "PASS macOS backend + interface + local /api reverse proxy"
